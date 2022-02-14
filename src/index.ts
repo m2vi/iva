@@ -100,6 +100,4 @@ async function fetchCSS(urls: string[]): Promise<string> {
   return results.join('\n');
 }
 
-fetchCSS(['https://dev.core.fluxi.ml/styles']);
-
 export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl, fetchCSS};
