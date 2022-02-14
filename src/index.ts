@@ -1,4 +1,5 @@
 import lodash, {PropertyPath} from 'lodash';
+import fetch from 'node-fetch';
 
 /**
  * A function that sorts an array of objects by attribute.
@@ -84,4 +85,21 @@ function baseUrl(req: any): string {
   return baseUrl;
 }
 
-export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
+/**
+ * A function that removes undefined fields from an object
+ * @param {String[]} urls - Request object
+ * @return {String} Returns a valid url
+ *
+ * @see Self-made 😎
+ */
+async function fetchCSS(urls: string[]): Promise<string> {
+  const f = async (url: string) => await (await fetch(url)).text();
+
+  const results = await Promise.all(urls.map((url) => f(url)));
+
+  return results.join('\n');
+}
+
+fetchCSS(['https://dev.core.fluxi.ml/styles']);
+
+export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl, fetchCSS};
