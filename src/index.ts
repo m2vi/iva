@@ -1,4 +1,8 @@
 import lodash, {PropertyPath} from 'lodash';
+import fetch from 'cross-fetch';
+
+export type Format = 'json' | 'text';
+export type Response<T> = Promise<T | string | null>;
 
 /**
  * A function that sorts an array of objects by attribute.
@@ -84,7 +88,44 @@ function baseUrl(req: any): string {
   return baseUrl;
 }
 
-// Is this dumb?
-export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
-const iva = {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
-export default iva;
+/**
+ * This function fetches json or text from a url.
+ * Actually unnecessary but one await less.
+ *
+ * @note I don't catch errors, you have to do it yourself
+ *
+ * @param {String} url - Request object
+ * @param {String} [format=json] - Request object
+ * @return {Any} The format in which the response is to be returned
+ */
+async function basicFetch<T>(url: string, format: Format = 'json'): Response<T> {
+  const response = await fetch(url);
+
+  if (format === 'json') {
+    return (await response.json()) as T;
+  } else if (format === 'text') {
+    return await response.text();
+  } else {
+    return null;
+  }
+}
+
+/**
+ * This function is very specifically designed for my needs.
+ * You pass URLs to the function that lead to CSS code.
+ * This text is then linked and returned.
+ *
+ * @note I don't catch errors, you have to do it yourself
+ *
+ * @param {String[]} urls - URLs directing to CSS files
+ * @return {String} Returns the merged CSS code as a string
+ */
+async function fetchCSS(urls: string[]): Promise<string> {
+  const fetcher = async (url: string) => await basicFetch(url, 'text');
+
+  const results = await Promise.all(urls.map(fetcher));
+
+  return results.join('\n');
+}
+
+export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl, fetchCSS, basicFetch};
