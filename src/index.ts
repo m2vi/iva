@@ -84,6 +84,7 @@ function baseUrl(req: any): string {
   return baseUrl;
 }
 
+// Is this dumb?
 export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
 const iva = {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
 export default iva;
