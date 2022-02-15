@@ -85,3 +85,5 @@ function baseUrl(req: any): string {
 }
 
 export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
+const iva = {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl};
+export default iva;
