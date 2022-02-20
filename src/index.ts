@@ -1,8 +1,14 @@
 import lodash, {PropertyPath} from 'lodash';
 import fetch from 'cross-fetch';
+import lib from './lib';
 
 export type Format = 'json' | 'text';
 export type Response<T> = Promise<T | string | null>;
+export interface HumanFileSizeConfig {
+  si: boolean;
+  dp: number;
+  long: boolean;
+}
 
 /**
  * A function that sorts an array of objects by attribute.
@@ -128,4 +134,53 @@ async function fetchCSS(urls: string[]): Promise<string> {
   return results.join('\n');
 }
 
-export {sortByKey, isIterable, stringToBoolean, removeEmpty, baseUrl, fetchCSS, basicFetch};
+/**
+ * Format bytes as human-readable text.
+ *
+ * @param {Number} bytes Number of bytes.
+ * @param {Object} config Config
+ *
+ * @return {String} Formatted string.
+ *
+ * @see https://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable-string
+ */
+function humanFileSize(bytes: number, config: Partial<HumanFileSizeConfig> = {}): string {
+  const {si = true, dp = 2, long = false} = config;
+  const {thresh, units} = lib.humanFileSize[si ? 'si' : 'iec'];
+
+  if (Math.abs(bytes) < thresh) return `${bytes} B`;
+
+  let u = -1;
+  const r = 10 ** dp;
+
+  do {
+    bytes /= thresh;
+    ++u;
+  } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+
+  return `${bytes.toFixed(dp)} ${units[u][long ? 'long' : 'short']}`;
+}
+
+export {
+  baseUrl,
+  basicFetch,
+  fetchCSS,
+  humanFileSize,
+  isIterable,
+  removeEmpty,
+  sortByKey,
+  stringToBoolean,
+};
+
+export const iva = {
+  baseUrl,
+  basicFetch,
+  fetchCSS,
+  humanFileSize,
+  isIterable,
+  removeEmpty,
+  sortByKey,
+  stringToBoolean,
+};
+
+export default iva;
