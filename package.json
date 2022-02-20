@@ -1,6 +1,6 @@
 {
   "name": "@m2vi/iva",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Iva is a collection of code snippets partially copied from stackoverflow and an attempt of mine to make an npm package and improve my typescript skills.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
