@@ -1,4 +1,4 @@
-import lodash, {PropertyPath} from 'lodash';
+import get from 'lodash/get';
 import fetch from 'cross-fetch';
 import lib from './lib';
 
@@ -10,6 +10,10 @@ export interface HumanFileSizeConfig {
   long: boolean;
 }
 
+export type Many<T> = T | ReadonlyArray<T>;
+export type PropertyName = string | number | symbol;
+export type PropertyPath = Many<PropertyName>;
+
 /**
  * A function that sorts an array of objects by attribute.
  * @param {Array.<Object>} list - An array of objects to be sorted
@@ -19,7 +23,7 @@ export interface HumanFileSizeConfig {
  * @see https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
  */
 function sortByKey<T>(list: Array<T>, path: PropertyPath): Array<T> {
-  const m = (param: any) => lodash.get(param, path);
+  const m = (param: any) => get(param, path);
 
   return list.sort((a, b) => {
     return m(a) > m(b) ? 1 : m(b) > m(a) ? -1 : 0;
@@ -104,7 +108,7 @@ function baseUrl(req: any): string {
  * @param {String} [format=json] - Request object
  * @return {Any} The format in which the response is to be returned
  */
-async function basicFetch<T>(url: string, format: Format = 'json'): Response<T> {
+async function basicFetch<T = any>(url: string, format: Format = 'json'): Response<T> {
   const response = await fetch(url);
 
   if (format === 'json') {
