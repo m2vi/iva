@@ -165,6 +165,34 @@ function humanFileSize(bytes: number, config: Partial<HumanFileSizeConfig> = {})
   return `${bytes.toFixed(dp)} ${units[u][long ? 'long' : 'short']}`;
 }
 
+/**
+ * Adds a "+" to positive numbers
+ *
+ * @param {Number} n Number
+ *
+ * @return {String} Number with prefix
+ */
+function numberWithPrefix(n: number): string {
+  const isPositive = Math.sign(n) === 1;
+
+  return `${isPositive ? '+' : ''}${n}`;
+}
+
+function gcd(a: number, b: number): number {
+  return b == 0 ? a : gcd(b, a % b);
+}
+
+/**
+ *
+ *
+ * @see https://stackoverflow.com/questions/1186414/whats-the-algorithm-to-calculate-aspect-ratio
+ */
+function aspectRatio(width: number, height: number): [number, number] {
+  const r = gcd(width, height);
+
+  return [width / r, height / r];
+}
+
 export {
   baseUrl,
   basicFetch,
@@ -174,6 +202,9 @@ export {
   removeEmpty,
   sortByKey,
   stringToBoolean,
+  numberWithPrefix,
+  gcd,
+  aspectRatio,
 };
 
 export const iva = {
@@ -185,6 +216,9 @@ export const iva = {
   removeEmpty,
   sortByKey,
   stringToBoolean,
+  numberWithPrefix,
+  gcd,
+  aspectRatio,
 };
 
 export default iva;
